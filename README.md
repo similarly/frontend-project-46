@@ -5,7 +5,7 @@
 #### Usage:
 `npm i @hexlet/code`\
 `npx gendiff <filepath1> <filepath2>`\
-`npm gendiff -h`  for help 
+`npm gendiff -h`  for help\
 `npm link` in folder or `npm i -g @hexlet/code` for globall install
 
 #### Usage examples:
