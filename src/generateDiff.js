@@ -1,77 +1,36 @@
-import { readFileSync } from 'fs'
-import { load } from 'js-yaml'
-import _ from 'lodash'
-import path from 'path'
+import { readFileSync } from 'fs';
+import { load } from 'js-yaml';
+import path from 'path';
+import formatDiff from './formatDiff.js';
 
-// function loadFromPath (path) {
-//   const extension = path.split('.').at(-1)
-//   if (extension === 'yaml') {
-//     return load(readFileSync(path))
-//   } else if (extension === 'json') {
-//     return JSON.parse(readFileSync(path))
-//   }
-// }
+function getFile(filepath) {
+  const resolvedPath = path.resolve(process.cwd(), filepath);
+  const file = readFileSync(resolvedPath);
+  const object = load(file);
+  return object;
+}
 
-function generateDiff (filepath1, filepath2, outputFormat = 'stylish') {
-  const [object1, object2] = [filepath1, filepath2]
-    .map((filepath) => load(readFileSync(path.resolve(process.cwd(), filepath))))
-  const diff = []
+function generateDiff(filepath1, filepath2, outputFormat = 'stylish') {
+  const object1 = getFile(filepath1);
+  const object2 = getFile(filepath2);
+  const diff = [];
   Object.entries(object1).forEach(([key, value]) => {
+    const prop = { key, value };
     if (!Object.hasOwn(object2, key)) {
-      diff.push({ change: 'removed', key, value })
+      diff.push({ ...prop, change: 'removed' });
     } else if (value === object2[key]) {
-      diff.push({ change: 'none', key, value })
+      diff.push({ ...prop, change: 'none' });
     } else {
-      diff.push({ change: 'updated', key, value, newValue: object2[key] })
+      diff.push({ ...prop, change: 'updated', newValue: object2[key] });
     }
-  })
+  });
   Object.entries(object2).forEach(([key, value]) => {
+    const prop = { key, value };
     if (!Object.hasOwn(object1, key)) {
-      diff.push({ change: 'added', key, value })
+      diff.push({ ...prop, change: 'added' });
     }
-  })
-  return formatDiff(diff, outputFormat)
+  });
+  return formatDiff(diff, outputFormat);
 }
 
-function formatDiff (diff, outputFormat) {
-  const sortedDiff = _.sortBy(diff, ['key'])
-  const tab = '    '
-  switch (outputFormat) {
-    case 'obj':
-      return sortedDiff
-    case 'json':
-      return ''
-    case 'plain':
-      return sortedDiff.map(({ change, key, value, newValue }) => {
-        switch (change) {
-          case 'added':
-            return `Property '${key}' was added with value: '${value}'`
-          case 'updated':
-            return `Property '${key}' was removed.`
-          case 'removed':
-            return `Property '${key}' was updated. From '${value}' to '${newValue}'.`
-          case 'none':
-            return undefined
-          default:
-            return 'Wrong property change specified.'
-        }
-      }).filter((line) => line).join('\n')
-    default:
-      return '{\n' + sortedDiff.map(({ change, key, value, newValue }) => {
-        switch (change) {
-          case 'added':
-            return `${tab}+ ${key}: ${value}`
-          case 'updated':
-            return `${tab}- ${key}: ${value}\n${tab}+ ${key}: ${newValue}`
-          case 'removed':
-            return `${tab}- ${key}: ${value}`
-          case 'none':
-            return `${tab}  ${key}: ${value}`
-          default:
-            return 'Wrong property change specified.'
-        }
-      }).join('\n') + '\n}'
-  }
-}
-
-export { generateDiff }
+export default generateDiff;
