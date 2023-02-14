@@ -16,9 +16,7 @@ jobs:
         
       - run: npm ci 
       - run: make lint
-      - run: before-build
       - run: make test
-      - run: after-build
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         env:
