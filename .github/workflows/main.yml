@@ -13,7 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
+      - uses: paambaati/codeclimate-action@v3.2.0
+        env:
+            CC_TEST_REPORTER_ID: ${{ vars.CODE_CLIMATE_REPORTER_ID }}
       - run: npm ci 
       - run: make lint
+      - run: before-build
       - run: make test
+      - run: after-build
   
