@@ -1,14 +1,12 @@
 import genDiff from '../src/generateDiff.js';
-// import { jest } from '@jest/globals'
 
-let [path1, path2, path3] = '';
-beforeAll(() => {
-  path1 = 'tests/file1.json';
-  path2 = 'tests/file2.json';
-  path3 = 'tests/file3.yaml';
-});
+const commonPath = `${__dirname}/__fixtures__/`;
+const path1 = `${commonPath}file1.json`;
+const path2 = `${commonPath}file2.json`;
+const path3 = `${commonPath}file3.yaml`;
+const path4 = `${commonPath}empty.json`;
 
-test('plain diff', () => {
+test('main flow', () => {
   const diffStylish = genDiff(path3, path2, 'stylish');
   expect(diffStylish).toEqual(`{
     - follow: false
@@ -40,4 +38,29 @@ Property 'verbose' was removed.`);
 Property 'proxy' was removed.
 Property 'timeout' was updated. From '50' to '20'.
 Property 'verbose' was added with value: 'true'`);
+});
+
+test('corner cases', () => {
+  const diffPlain = genDiff(path4, path3, 'plain');
+  expect(diffPlain).toEqual(`Property 'follow' was added with value: 'false'
+Property 'host' was added with value: 'hexlet.io'
+Property 'proxy' was added with value: '123.234.53.22'
+Property 'timeout' was added with value: '50'`);
+
+  const diffStylish = genDiff(path4, path3, 'stylish');
+  expect(diffStylish).toEqual(`{
+    + follow: false
+    + host: hexlet.io
+    + proxy: 123.234.53.22
+    + timeout: 50
+}`);
+  const diffEqualPlain = genDiff(path3, path3, 'plain');
+  expect(diffEqualPlain).toEqual('');
+
+  const diffEqualStylish = genDiff(path2, path2, 'stylish');
+  expect(diffEqualStylish).toEqual(`{
+      host: hexlet.io
+      timeout: 20
+      verbose: true
+}`);
 });
