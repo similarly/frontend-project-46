@@ -1,5 +1,5 @@
 test:
-	npm run test
+	npm test
 lint: 
 	npx eslint .
 test-coverage:
