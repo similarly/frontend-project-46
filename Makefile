@@ -3,6 +3,6 @@ test:
 lint: 
 	npx eslint .
 test-coverage:
-	npx jest --coverage
+	npm test -- --coverage --coverageProvider=v8
 install:
 	npm ci
