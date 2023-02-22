@@ -5,7 +5,7 @@
   "description": "hexlet study project - differences calculator",
   "main": "src/generateDiff.js",
   "bin": {
-    "genDiff": "node bin/genDiff.js"
+    "gendiff": "./bin/gendiff.js"
   },
   "scripts": {
     "test": "jest"

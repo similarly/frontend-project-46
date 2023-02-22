@@ -1,36 +1,22 @@
 import { readFileSync } from 'fs';
-import { load } from 'js-yaml';
-import path from 'path';
 import formatDiff from './formatDiff.js';
+import createDiffTree from './createDiffTree.js';
+import parse from './parsers.js';
 
-function getFile(filepath) {
-  const resolvedPath = path.resolve(process.cwd(), filepath);
-  const file = readFileSync(resolvedPath);
-  const object = load(file);
-  return object;
+function getData(filepath) {
+  // const resolvedPath = path.resolve(process.cwd(), filepath);
+  const resolvedPath = filepath;
+  const data = readFileSync(resolvedPath);
+  return data;
 }
 
-function generateDiff(filepath1, filepath2, outputFormat = 'stylish') {
-  const object1 = getFile(filepath1);
-  const object2 = getFile(filepath2);
-  const diff = [];
-  Object.entries(object1).forEach(([key, value]) => {
-    const prop = { key, value };
-    if (!Object.hasOwn(object2, key)) {
-      diff.push({ ...prop, change: 'removed' });
-    } else if (value === object2[key]) {
-      diff.push({ ...prop, change: 'none' });
-    } else {
-      diff.push({ ...prop, change: 'updated', newValue: object2[key] });
-    }
-  });
-  Object.entries(object2).forEach(([key, value]) => {
-    const prop = { key, value };
-    if (!Object.hasOwn(object1, key)) {
-      diff.push({ ...prop, change: 'added' });
-    }
-  });
-  return formatDiff(diff, outputFormat);
+function getDiff(filepath1, filepath2, outputFormat = 'stylish') {
+  const getExtension = (filename) => filename.split('.').at(-1);
+  const [object1, object2] = [filepath1, filepath2]
+    .map((path) => parse(getData(path), getExtension(path)));
+
+  const diffTree = createDiffTree(object1, object2);
+  return formatDiff(diffTree, outputFormat);
 }
 
-export default generateDiff;
+export default getDiff;
