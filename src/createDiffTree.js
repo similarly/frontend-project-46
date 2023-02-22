@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 // node types: removed | none | added | updated | root
-function createDiffTree(object1, object2) {
+function createChildren(object1, object2) {
   const isObject = (val) => (_.isObject(val) && !_.isArray(val));
   const part1 = Object.entries(object1).map(([key, value1]) => {
     const value2 = object2[key];
@@ -23,7 +23,7 @@ function createDiffTree(object1, object2) {
       if (isObject(value1) && isObject(value2)) {
         return {
           key,
-          value: createDiffTree(value1, value2),
+          children: createChildren(value1, value2),
           type: 'updated object',
         };
       }
@@ -46,7 +46,9 @@ function createDiffTree(object1, object2) {
     }
     return undefined;
   }).filter((node) => node !== undefined);
-  return part1.concat(part2);
+  const tree = _.sortBy(part1.concat(part2), ['key']);
+  return tree;
 }
 
+const createDiffTree = (object1, object2) => ({ children: createChildren(object1, object2), type: 'root' });
 export default createDiffTree;
