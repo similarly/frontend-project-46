@@ -4,7 +4,6 @@ import _ from 'lodash';
 function createChildren(object1, object2) {
   const isObject = (val) => (_.isObject(val) && !_.isArray(val));
   const part1 = Object.entries(object1).map(([key, value1]) => {
-    const value2 = object2[key];
     if (!Object.hasOwn(object2, key)) {
       return {
         key,
@@ -13,24 +12,24 @@ function createChildren(object1, object2) {
       };
     }
     if (Object.hasOwn(object2, key)) {
-      if (_.isEqual(value1, value2)) {
+      if (_.isEqual(value1, object2[key])) {
         return {
           key,
           value: value1,
           type: 'none',
         };
       }
-      if (isObject(value1) && isObject(value2)) {
+      if (isObject(value1) && isObject(object2[key])) {
         return {
           key,
-          children: createChildren(value1, value2),
+          children: createChildren(value1, object2[key]),
           type: 'updated object',
         };
       }
       return {
         key,
         oldValue: value1,
-        value: value2,
+        value: object2[key],
         type: 'updated',
       };
     }

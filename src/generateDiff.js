@@ -1,10 +1,9 @@
 import { readFileSync } from 'fs';
-import formatDiff from './formatDiff.js';
+import formatDiff from './formatters/index.js';
 import createDiffTree from './createDiffTree.js';
 import parse from './parsers.js';
 
 function getData(filepath) {
-  // const resolvedPath = path.resolve(process.cwd(), filepath);
   const resolvedPath = filepath;
   const data = readFileSync(resolvedPath);
   return data;

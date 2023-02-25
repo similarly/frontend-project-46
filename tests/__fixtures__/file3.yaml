@@ -1,0 +1,5 @@
+common: 
+  setting1: Value 2
+  setting2: 100
+  setting4:
+group3: true

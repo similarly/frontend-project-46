@@ -14,3 +14,4 @@
 #### Usage examples:
 
 - [stage 3](https://asciinema.org/a/iUl7dgz6VTueG9UkDGQ6tbZmS)
+- [final stage](https://asciinema.org/a/GXpGRmVCWVtk2NyrOYc3NP2Fx)

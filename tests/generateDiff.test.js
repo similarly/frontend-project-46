@@ -3,39 +3,43 @@ import path from 'path';
 import genDiff from '../src/generateDiff.js';
 
 const fixturesPath = path.join(__dirname, '__fixtures__');
-const path1 = path.join(fixturesPath, 'file1.json');
-const path2 = path.join(fixturesPath, 'file2.json');
-const getResult = (resultName) => readFileSync(path.join(fixturesPath, resultName), 'utf-8');
+const getPath = (fileName) => path.join(fixturesPath, fileName);
+const getResult = (resultName) => readFileSync(path.join(fixturesPath, 'results', resultName), 'utf-8');
 
 test('main flow', () => {
-  const diffStylish = genDiff(path1, path2, 'stylish');
-  expect(diffStylish).toEqual(getResult('resultStylish.txt'));
+  const diffStylish = genDiff(getPath('file1.json'), getPath('file2.json'), 'stylish');
+  expect(diffStylish).toEqual(getResult('stylish.txt'));
 
-  const diffPlain = genDiff(path2, path1, 'plain');
-  expect(diffPlain).toEqual(getResult('resultPlain.txt'));
-})
+  const diffPlain = genDiff(getPath('file1.json'), getPath('file2.json'), 'plain');
+  expect(diffPlain).toEqual(getResult('plain.txt'));
 
-/* test('corner cases', () => {
-  const diffPlain = genDiff(path4, path3, 'plain');
-  expect(diffPlain).toEqual(`Property 'follow' was added with value: 'false'
-Property 'host' was added with value: 'hexlet.io'
-Property 'proxy' was added with value: '123.234.53.22'
-Property 'timeout' was added with value: '50'`);
+  const diffEmptyPlain = genDiff(getPath('file2.json'), getPath('file3.yaml'), 'json');
+  expect(diffEmptyPlain).toEqual(getResult('emptyJson.txt'));
 
-  const diffStylish = genDiff(path4, path3, 'stylish');
-  expect(diffStylish).toEqual(`{
-    + follow: false
-    + host: hexlet.io
-    + proxy: 123.234.53.22
-    + timeout: 50
-}`);
-  const diffEqualPlain = genDiff(path3, path3, 'plain');
-  expect(diffEqualPlain).toEqual('');
+  const diffEmptyStylish = genDiff(getPath('file1.json'), getPath('file3.yaml'));
+  expect(diffEmptyStylish).toEqual(getResult('yamlStylish.txt'));
+});
 
-  const diffEqualStylish = genDiff(path2, path2, 'stylish');
-  expect(diffEqualStylish).toEqual(`{
-      host: hexlet.io
-      timeout: 20
-      verbose: true
-}`);
-}); */
+test('corner cases', () => {
+  expect(() => {
+    genDiff(getPath('wrongfiletype1.'), getPath('wrongfiletype2.g'));
+  }).toThrow(new Error("Can't parse this filetype."));
+
+  expect(() => {
+    genDiff(getPath('file1.json'), getPath('wrongfiletype3'));
+  }).toThrow(new Error("Can't parse this filetype."));
+
+  expect(() => {
+    genDiff(getPath('sdfsdf'), getPath('sdf'));
+  }).toThrow('no such file or directory');
+
+  // expect syntax error
+  expect(() => {
+    genDiff(getPath('empty.json'), getPath('file1.json'));
+  }).toThrow();
+
+  // yaml parser returns undefined when file is empty
+  expect(() => {
+    genDiff(getPath('empty2.yaml'), getPath('file1.json'));
+  }).toThrow('is not valid');
+});
