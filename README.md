@@ -1,3 +1,8 @@
+#### Вычислитель различий
+
+Пакет позволяющий вычислить различия в данных между двумя файлами (поддерживает .json и .yaml). Разница представляется в виде дерева, и затем выводится в заданном вами виде.\
+Возможные форматы: json - однострочный формат показывающий внутреннее представление, plain - текстовый формат выводящий разницу по предложениям, и stylish - оформленный формат с отступами.
+
 ### Hexlet tests and linter status:
 
 [![Actions Status](https://github.com/similarly/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/similarly/frontend-project-46/actions)

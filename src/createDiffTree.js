@@ -49,5 +49,5 @@ function createChildren(object1, object2) {
   return tree;
 }
 
-const createDiffTree = (object1, object2) => ({ children: createChildren(object1, object2), type: 'root' });
+const createDiffTree = (object1, object2) => ({ children: createChildren(object1, object2) });
 export default createDiffTree;

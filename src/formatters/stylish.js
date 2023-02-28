@@ -18,8 +18,6 @@ function formatToStylish(tree) {
     const tab = ' '.repeat(4 * level - 2);
     const braceTab = ' '.repeat(4 * level);
     switch (node.type) {
-      case 'root':
-        return `{${node.children.map((child) => iter(child, 1)).join('')}\n}`;
       case 'added':
         return `\n${tab}+ ${node.key}: ${toString(node.value, level + 1)}`;
       case 'updated':
@@ -28,11 +26,12 @@ function formatToStylish(tree) {
         return `\n${tab}- ${node.key}: ${toString(node.value, level + 1)}`;
       case 'none':
         return `\n${tab}  ${node.key}: ${toString(node.value, level + 1)}`;
-        // Updated object to object
+      // Updated object to object
       case 'updated object':
         return `\n${tab}  ${node.key}: {${node.children.map((child) => iter(child, level + 1)).join('')}\n${braceTab}}`;
+      // Root node
       default:
-        return 'Wrong property change specified.';
+        return `{${node.children.map((child) => iter(child, 1)).join('')}\n}`;
     }
   };
   return iter(tree, 1);

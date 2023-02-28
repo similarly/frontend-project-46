@@ -15,20 +15,18 @@ function formatToPlain(tree) {
     // Concat path
     const totalPath = path.concat(node.key);
     switch (node.type) {
-      case 'root':
-        return node.children.map(((child) => iter(child))).join('').trim();
       case 'added':
         return `Property '${totalPath}' was added with value: ${plainToString(node.value)}\n`;
       case 'updated':
         return `Property '${totalPath}' was updated. From ${plainToString(node.oldValue)} to ${plainToString(node.value)}\n`;
       case 'removed':
         return `Property '${totalPath}' was removed\n`;
+      // Updated object to object
       case 'updated object':
-        return node.children.map(((child) => iter(child, totalPath.concat('.')))).join('');
-      case 'none':
-        return '';
+        return node.children.filter((nd) => nd.type !== 'none').map(((child) => iter(child, totalPath.concat('.')))).join('');
+      // Root node
       default:
-        return 'Wrong property change specified.';
+        return node.children.filter((nd) => nd.type !== 'none').map(((child) => iter(child))).join('').trim();
     }
   };
 

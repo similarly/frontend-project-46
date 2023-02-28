@@ -1,0 +1,17 @@
+common: 
+  setting1: Value 2
+  setting2: 100
+  setting4: false
+  setting6: 
+    key: notvalue
+    doge: 
+      wow: 
+        wownested:
+          wownesteddeeper: well
+group1:
+  foo: bar
+group3: 
+  deep:
+    id:
+      number: notanumber
+  fee: scary

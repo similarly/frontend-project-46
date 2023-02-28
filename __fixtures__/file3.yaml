@@ -1,0 +1,15 @@
+common: 
+  setting1: Value 2
+  setting2: 100
+  setting4: false
+  setting6: 
+    key: value
+    doge: 
+      notwow: ""
+group1:
+  foo: bar
+group3: 
+  deep:
+    id:
+      field1:  hahaha
+      field2: lala

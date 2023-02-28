@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import getDiff from '../src/generateDiff.js';
+import getDiff from '../src/index.js';
 
 const program = new Command();
 
@@ -12,8 +12,7 @@ program
   .arguments('<filepath1> <filepath2>')
   .option('-f, --format <char>', 'output format (plain, stylish, json, debug)')
   .parse()
-  .action(() => {
-    const [filepath1, filepath2] = program.args.slice(0, 2);
+  .action((filepath1, filepath2) => {
     const { format } = program.opts();
     console.log(getDiff(filepath1, filepath2, format));
   });

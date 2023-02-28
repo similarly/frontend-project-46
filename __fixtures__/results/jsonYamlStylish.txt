@@ -5,18 +5,19 @@
       - setting2: 200
       + setting2: 100
       - setting3: true
-      + setting4: null
-      - setting6: {
+      + setting4: false
+        setting6: {
             doge: {
-                wow: 
+              + notwow: 
+              - wow: 
             }
             key: value
         }
     }
-  - group1: {
-        baz: bas
+    group1: {
+      - baz: bas
         foo: bar
-        nest: {
+      - nest: {
             key: value
         }
     }
@@ -26,5 +27,12 @@
             id: 45
         }
     }
-  + group3: true
+  + group3: {
+        deep: {
+            id: {
+                field1: hahaha
+                field2: lala
+            }
+        }
+    }
 }
